@@ -1,13 +1,14 @@
 import numpy as np
 import torch
 import torch.nn
+from torch.autograd import Variable
  
 datas = np.array([[1, 2], [3, 4]])
 labels = np.array([[2, 3], [4, 5]])
 loss_fn = torch.nn.MSELoss()
 
-input1 = torch.autograd.Variable(torch.from_numpy(datas).float(), requires_grad=True)
-target1 = torch.autograd.Variable(torch.from_numpy(labels).float(), requires_grad=True)
+input1 = Variable(torch.from_numpy(datas).float(), requires_grad=True)
+target1 = Variable(torch.from_numpy(labels).float(), requires_grad=True)
 print(input1)
 print(target1)
 #tensor([[1., 2.],
