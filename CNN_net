@@ -1,0 +1,38 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class CNN_net(nn.Module):
+    def _init(self):
+        # nn.Module的初始化函数
+        super(CNN_net, self)._init()
+        # 定义二维卷积层：输入通道为1的灰度图，输出4特征，卷积核7*7
+        self.conv = nn.Conv2d(1, 4, 7)
+        # 池化层：均值池化
+        self.pool = nn.AvgPool2d(2, 2)
+        # 全连接层和softmax
+        self.fc = nn.Linear(10*10*4, 10)
+        self.softmax = nn.Softmax()
+    def forward(self, x):
+        # 卷积层，二维卷积 --> sigmoid --> 池化
+        out = self.conv(x)
+        out = F.sigmoid(out)
+        out = self.pool(out)
+        # 将特征的维度进行变化
+        out = out.view(-1, self.num_flat_features(out)) #第一维度不变，后面的维度变为self.num_flat_features(out)
+        # 全连接层和softmax处理
+        out = self.fc(out)
+        out = self.softmax(out)
+        return out
+    def num_flat_features(self, x):
+        # batch_size * filter_dim * feature_dim * feature_dim --> batch_size * flat_features
+        size = x.size()[1:]
+        print(size)
+        num_features = 1
+        for s in size:
+            num_features *= s
+        print(size)
+        return num_features
+
+# 定义一个cnn网络
+net = CNN_net()
